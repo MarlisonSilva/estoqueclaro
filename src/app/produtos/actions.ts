@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { exigirUsuario } from "@/lib/auth";
 import { tratarErro } from "@/lib/erros";
 import { errosPorCampo, valoresDoForm, type EstadoFormulario } from "@/lib/validacao/comum";
 import { fichaItemSchema, produtoSchema } from "@/lib/validacao/produto";
@@ -21,6 +22,7 @@ function revalidar(id?: number) {
 }
 
 export async function criarProdutoAction(_: EstadoFormulario, form: FormData): Promise<EstadoFormulario> {
+  await exigirUsuario();
   const r = produtoSchema.safeParse(Object.fromEntries(form));
   if (!r.success) return { erros: errosPorCampo(r.error), valores: valoresDoForm(form) };
   let id: number;
@@ -34,6 +36,7 @@ export async function criarProdutoAction(_: EstadoFormulario, form: FormData): P
 }
 
 export async function atualizarProdutoAction(id: number, _: EstadoFormulario, form: FormData): Promise<EstadoFormulario> {
+  await exigirUsuario();
   const r = produtoSchema.safeParse(Object.fromEntries(form));
   if (!r.success) return { erros: errosPorCampo(r.error), valores: valoresDoForm(form) };
   try {
@@ -46,6 +49,7 @@ export async function atualizarProdutoAction(id: number, _: EstadoFormulario, fo
 }
 
 export async function salvarItemFichaAction(produtoId: number, _: EstadoFormulario, form: FormData): Promise<EstadoFormulario> {
+  await exigirUsuario();
   const r = fichaItemSchema.safeParse(Object.fromEntries(form));
   if (!r.success) return { erros: errosPorCampo(r.error), valores: valoresDoForm(form) };
   try {
@@ -58,17 +62,20 @@ export async function salvarItemFichaAction(produtoId: number, _: EstadoFormular
 }
 
 export async function removerItemFichaAction(produtoId: number, itemId: number) {
+  await exigirUsuario();
   await removerItemFicha(produtoId, itemId);
   revalidar(produtoId);
 }
 
 export async function excluirProdutoAction(id: number) {
+  await exigirUsuario();
   const r = await excluirOuDesativarProduto(id);
   revalidar(id);
   redirect(r === "excluido" ? "/produtos" : `/produtos/${id}`);
 }
 
 export async function reativarProdutoAction(id: number) {
+  await exigirUsuario();
   await reativarProduto(id);
   revalidar(id);
 }

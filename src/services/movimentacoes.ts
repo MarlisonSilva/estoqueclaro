@@ -85,6 +85,8 @@ export function registrarMovimentacao(dados: NovaMovimentacao) {
 /** Inventário: o gestor informa o que contou; gravamos a diferença como AJUSTE. */
 export function registrarInventario(insumoId: number, quantidadeContada: number, motivo?: string, data?: Date) {
   return prisma.$transaction(async (tx) => {
+    // Trava antes de ler o saldo: a diferença é calculada sobre o saldo que será gravado.
+    await tx.$queryRaw`SELECT id FROM "Insumo" WHERE id = ${insumoId} FOR UPDATE`;
     const insumo = await tx.insumo.findUnique({ where: { id: insumoId } });
     if (!insumo) throw new RegraNegocioError("Insumo não encontrado.");
     const diferenca = arredondarQtd(quantidadeContada - insumo.quantidadeEstoque);

@@ -1,12 +1,19 @@
 import { z } from "zod";
 
+/** Teto de qualquer número de formulário: barra notação exponencial absurda (1e308). */
+const LIMITE = 1_000_000_000;
+
 /**
  * Número vindo de formulário: aceita vírgula decimal ("1,5") e rejeita vazio.
  */
 export const numeroBR = (mensagem = "Informe um número válido") =>
   z.preprocess(
     (v) => (typeof v === "string" ? (v.trim() === "" ? undefined : Number(v.replace(",", "."))) : v),
-    z.number({ required_error: "Campo obrigatório", invalid_type_error: mensagem }).finite(mensagem),
+    z
+      .number({ required_error: "Campo obrigatório", invalid_type_error: mensagem })
+      .finite(mensagem)
+      .min(-LIMITE, "Valor muito grande")
+      .max(LIMITE, "Valor muito grande"),
   );
 
 /** Texto opcional: string vazia vira undefined. */

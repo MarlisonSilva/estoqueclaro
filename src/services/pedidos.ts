@@ -67,6 +67,8 @@ async function faltasParaProduzir(db: Prisma.TransactionClient, produtoId: numbe
  */
 export function mudarStatusPedido(id: number, novo: StatusPedido) {
   return prisma.$transaction(async (tx) => {
+    // Trava o pedido: dois cliques simultâneos não leem o mesmo status nem estornam em dobro.
+    await tx.$queryRaw`SELECT id FROM "Pedido" WHERE id = ${id} FOR UPDATE`;
     const pedido = await tx.pedido.findUnique({ where: { id } });
     if (!pedido) throw new RegraNegocioError("Pedido não encontrado.");
     const atual = pedido.status as StatusPedido;

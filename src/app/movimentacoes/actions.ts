@@ -1,12 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { exigirUsuario } from "@/lib/auth";
 import { tratarErro } from "@/lib/erros";
 import { errosPorCampo, valoresDoForm, type EstadoFormulario } from "@/lib/validacao/comum";
 import { movimentacaoSchema } from "@/lib/validacao/movimentacao";
 import { registrarInventario, registrarMovimentacao } from "@/services/movimentacoes";
 
 export async function registrarMovimentacaoAction(_: EstadoFormulario, form: FormData): Promise<EstadoFormulario> {
+  await exigirUsuario();
   const r = movimentacaoSchema.safeParse(Object.fromEntries(form));
   if (!r.success) return { erros: errosPorCampo(r.error), valores: valoresDoForm(form) };
   const d = r.data;

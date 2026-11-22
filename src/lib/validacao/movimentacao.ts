@@ -26,7 +26,7 @@ export const movimentacaoSchema = z.discriminatedUnion("tipo", [
   z.object({
     tipo: z.literal("ENTRADA"),
     insumoId: z.coerce.number().int().positive("Escolha o insumo"),
-    quantidade: numeroBR().pipe(z.number().positive("Deve ser maior que zero")),
+    quantidade: numeroBR().pipe(z.number().min(0.001, "Mínimo 0,001")),
     custoUnitario: numeroBR().pipe(z.number().min(0, "Não pode ser negativo")),
     motivo: textoOpcional(200),
     data: dataOpcional,
@@ -34,7 +34,7 @@ export const movimentacaoSchema = z.discriminatedUnion("tipo", [
   z.object({
     tipo: z.enum(["SAIDA_PRODUCAO", "PERDA"]),
     insumoId: z.coerce.number().int().positive("Escolha o insumo"),
-    quantidade: numeroBR().pipe(z.number().positive("Deve ser maior que zero")),
+    quantidade: numeroBR().pipe(z.number().min(0.001, "Mínimo 0,001")),
     motivo: textoOpcional(200),
     data: dataOpcional,
   }),

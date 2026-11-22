@@ -47,6 +47,8 @@ Acesse http://localhost:3000.
 
 - `DATABASE_URL`: Transaction pooler do Supabase (porta 6543, com `?pgbouncer=true`), usada pelo app.
 - `DIRECT_URL`: Session pooler (porta 5432), usada por `migrate`, seed e testes.
+- `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`: URL e chave publishable do projeto (login).
+- `AUTH_EMAILS_PERMITIDOS`: e-mails que podem entrar, separados por vírgula. Vazio = ninguém entra.
 
 > **npm 11+**: se aparecer aviso de `allow-scripts` e o Prisma reclamar de engine ausente,
 > rode `npm approve-scripts prisma @prisma/client @prisma/engines esbuild` e depois `npm install`.
@@ -139,10 +141,21 @@ server actions). As telas nunca calculam nada de negócio. Para adicionar depois
 REST, integração com Mercado Pago, área do cliente ou autenticação, basta chamar os
 mesmos services: nenhuma regra precisa ser reescrita.
 
+### Login (Supabase Auth)
+
+- Todas as telas exigem login (e-mail e senha). O `src/middleware.ts` redireciona para `/login`
+  e **toda server action** chama `exigirUsuario()` antes de qualquer coisa, porque server actions
+  são endpoints públicos.
+- Só entra quem está logado **e** na lista `AUTH_EMAILS_PERMITIDOS`.
+- Crie o usuário no painel: Authentication > Users > Add user (marque "Auto Confirm User") e
+  desligue o cadastro aberto em Authentication > Sign In / Providers > "Allow new users to sign up".
+- As tabelas têm RLS ligado e nenhuma policy: a Data API do Supabase (chave anon, pública) não
+  lê nem grava nada. O app acessa o banco pelo Prisma, como dono das tabelas.
+
 ### Deploy na Vercel
 
 1. Suba o repositório no GitHub e importe o projeto na Vercel (framework Next.js, detectado sozinho).
-2. Em Settings > Environment Variables, defina `DATABASE_URL` e `DIRECT_URL` (mesmos valores do `.env`).
+2. Em Settings > Environment Variables, defina as 5 variáveis do `.env` (`DATABASE_URL`, `DIRECT_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `AUTH_EMAILS_PERMITIDOS`).
 3. Aplique as migrações no banco antes do primeiro deploy: `npx prisma migrate deploy`
    (a Vercel só roda o build, não as migrações).
 4. Dados sensíveis ficam só no `.env` e nas variáveis da Vercel; o `.env` está no `.gitignore`.
@@ -240,7 +253,8 @@ trava a linha do insumo com `SELECT ... FOR UPDATE` (ver `src/services/movimenta
 - [x] Fase 5 — alertas, ponto de pedido e dashboard
 - [x] Fase 6 — financeiro, testes finais e README
 - [x] Fase 7 — previsão de consumo mensal por média móvel
+- [x] Fase 8 — Postgres (Supabase), login com Supabase Auth, RLS e deploy
 
 ## Fora do escopo desta versão
 
-Simulador 3D, integração com Mercado Pago, área do cliente e autenticação (uso por um único gestor).
+Simulador 3D, integração com Mercado Pago, área do cliente e perfis de acesso (todo usuário permitido tem acesso total).

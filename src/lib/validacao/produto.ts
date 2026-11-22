@@ -18,7 +18,7 @@ export const produtoSchema = z.object({
 
 export const fichaItemSchema = z.object({
   insumoId: z.coerce.number().int().positive("Escolha o insumo"),
-  quantidade: numeroBR().pipe(z.number().positive("Deve ser maior que zero")),
+  quantidade: numeroBR().pipe(z.number().min(0.001, "Mínimo 0,001")),
   perdaPercentual: percentual(100, "Use no máximo 100%"),
 });
 

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { exigirUsuario } from "@/lib/auth";
 import { tratarErro } from "@/lib/erros";
 import { errosPorCampo, valoresDoForm, type EstadoFormulario } from "@/lib/validacao/comum";
 import { pedidoSchema, statusSchema } from "@/lib/validacao/pedido";
@@ -12,6 +13,7 @@ function revalidar() {
 }
 
 export async function criarPedidoAction(_: EstadoFormulario, form: FormData): Promise<EstadoFormulario> {
+  await exigirUsuario();
   const r = pedidoSchema.safeParse(Object.fromEntries(form));
   if (!r.success) return { erros: errosPorCampo(r.error), valores: valoresDoForm(form) };
   try {
@@ -24,6 +26,7 @@ export async function criarPedidoAction(_: EstadoFormulario, form: FormData): Pr
 }
 
 export async function mudarStatusAction(id: number, _: EstadoFormulario, form: FormData): Promise<EstadoFormulario> {
+  await exigirUsuario();
   const r = statusSchema.safeParse(form.get("status"));
   if (!r.success) return { mensagem: "Status inválido." };
   try {

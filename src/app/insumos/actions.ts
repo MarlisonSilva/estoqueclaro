@@ -2,12 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { exigirUsuario } from "@/lib/auth";
 import { tratarErro } from "@/lib/erros";
 import { errosPorCampo, valoresDoForm, type EstadoFormulario } from "@/lib/validacao/comum";
 import { insumoCriacaoSchema, insumoEdicaoSchema } from "@/lib/validacao/insumo";
 import { atualizarInsumo, criarInsumo, excluirOuDesativarInsumo, reativarInsumo } from "@/services/insumos";
 
 export async function criarInsumoAction(_: EstadoFormulario, form: FormData): Promise<EstadoFormulario> {
+  await exigirUsuario();
   const r = insumoCriacaoSchema.safeParse(Object.fromEntries(form));
   if (!r.success) return { erros: errosPorCampo(r.error), valores: valoresDoForm(form) };
   let id: number;
@@ -21,6 +23,7 @@ export async function criarInsumoAction(_: EstadoFormulario, form: FormData): Pr
 }
 
 export async function atualizarInsumoAction(id: number, _: EstadoFormulario, form: FormData): Promise<EstadoFormulario> {
+  await exigirUsuario();
   const r = insumoEdicaoSchema.safeParse(Object.fromEntries(form));
   if (!r.success) return { erros: errosPorCampo(r.error), valores: valoresDoForm(form) };
   try {
@@ -34,12 +37,14 @@ export async function atualizarInsumoAction(id: number, _: EstadoFormulario, for
 }
 
 export async function excluirInsumoAction(id: number) {
+  await exigirUsuario();
   const resultado = await excluirOuDesativarInsumo(id);
   revalidatePath("/insumos");
   redirect(resultado === "excluido" ? "/insumos" : `/insumos/${id}`);
 }
 
 export async function reativarInsumoAction(id: number) {
+  await exigirUsuario();
   await reativarInsumo(id);
   revalidatePath("/insumos");
   revalidatePath(`/insumos/${id}`);

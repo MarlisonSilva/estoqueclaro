@@ -57,6 +57,7 @@ export function aplicarMovimento(
 ): number {
   const delta = deltaDoMovimento(tipo, quantidade);
   const novo = arredondarQtd(saldoAtual + delta);
+  if (!Number.isFinite(novo)) throw new Error("Quantidade inválida.");
   if (novo < 0) throw new EstoqueInsuficienteError(saldoAtual, delta);
   return novo;
 }
