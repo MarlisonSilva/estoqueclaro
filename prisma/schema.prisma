@@ -1,0 +1,91 @@
+// Schema do EstoqueClaro.
+// Enums ficam como String (validados por Zod/TS).
+// DATABASE_URL = conexão da aplicação (pooler no Supabase/Vercel); DIRECT_URL = conexão direta, usada por migrate/db push.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Insumo {
+  id                Int            @id @default(autoincrement())
+  nome              String         @unique
+  categoria         String
+  unidade           String // un | folha | ml | m | kg
+  // Saldo em cache: só muda junto com uma Movimentacao, na mesma transação.
+  quantidadeEstoque Float          @default(0)
+  estoqueMinimo     Float          @default(0)
+  // Custo médio ponderado, recalculado a cada ENTRADA.
+  custoUnitario     Float          @default(0)
+  prazoEntregaDias  Int            @default(0)
+  ativo             Boolean        @default(true)
+  criadoEm          DateTime       @default(now())
+  movimentacoes     Movimentacao[]
+  fichaItens        FichaItem[]
+}
+
+model Movimentacao {
+  id            Int      @id @default(autoincrement())
+  insumoId      Int
+  tipo          String // ENTRADA | SAIDA_PRODUCAO | PERDA | AJUSTE | ESTORNO
+  // Sempre positiva; o tipo define o sinal. Exceção: AJUSTE guarda o delta com sinal.
+  quantidade    Float
+  custoUnitario Float
+  custoTotal    Float
+  motivo        String?
+  data          DateTime @default(now())
+  pedidoId      Int?
+  insumo        Insumo   @relation(fields: [insumoId], references: [id])
+  pedido        Pedido?  @relation(fields: [pedidoId], references: [id])
+
+  @@index([insumoId, data])
+  @@index([pedidoId])
+}
+
+model Produto {
+  id               Int         @id @default(autoincrement())
+  nome             String      @unique
+  // Custo de tempo/energia por unidade produzida.
+  custoOperacional Float       @default(0)
+  // Margem-alvo sobre o preço de venda (0,4 = 40%).
+  margemAlvo       Float       @default(0.4)
+  // Preço praticado; quando nulo, usa-se o sugerido.
+  precoVenda       Float?
+  ativo            Boolean     @default(true)
+  itens            FichaItem[]
+  pedidos          Pedido[]
+}
+
+model FichaItem {
+  id              Int     @id @default(autoincrement())
+  produtoId       Int
+  insumoId        Int
+  // Quantidade por unidade produzida, sem perda.
+  quantidade      Float
+  // 0,05 = 5% de perda sobre a quantidade.
+  perdaPercentual Float   @default(0)
+  produto         Produto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  insumo          Insumo  @relation(fields: [insumoId], references: [id])
+
+  @@unique([produtoId, insumoId])
+}
+
+model Pedido {
+  id            Int            @id @default(autoincrement())
+  cliente       String?
+  produtoId     Int
+  quantidade    Int
+  precoUnitario Float
+  status        String         @default("AGUARDANDO_ARTE") // AGUARDANDO_ARTE | EM_PRODUCAO | CONCLUIDO | CANCELADO
+  criadoEm      DateTime       @default(now())
+  concluidoEm   DateTime?
+  produto       Produto        @relation(fields: [produtoId], references: [id])
+  movimentacoes Movimentacao[]
+
+  @@index([status])
+}

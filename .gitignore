@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# banco local antigo (SQLite)
+prisma/dev.db*
+!.env.example
+prisma/test.db*
+
+# artefatos de testes de navegador
+.playwright-mcp/
