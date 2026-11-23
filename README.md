@@ -97,13 +97,13 @@ perda da ficha técnica), portanto o histórico é consistente.
 
 | Tela | O que faz |
 |---|---|
-| **Dashboard** (`/`) | Cards de alerta, valor em estoque e pedidos em produção; lista "Comprar hoje"; gráficos de consumo e de margem |
+| **Dashboard** (`/`) | Faixa de destaque com a decisão do dia (cor por gravidade), lista "Comprar hoje", cartões de resumo e gráficos de consumo e de margem |
 | **Alertas** (`/alertas`) | Semáforo de todos os insumos, ponto de pedido, compra sugerida e custo estimado; filtro por situação |
 | **Insumos** (`/insumos`) | Cadastro com busca e filtro por categoria; ficha do insumo com histórico e lançamento rápido |
 | **Movimentações** (`/movimentacoes`) | Lançar entrada, saída, perda e inventário; histórico filtrável por insumo, tipo e período |
 | **Fichas técnicas** (`/produtos`) | Custo real, perda, preço sugerido e margem real de cada produto; editor da composição |
 | **Pedidos** (`/pedidos`) | Registro e fluxo de status com baixa automática, bloqueio por falta e estorno |
-| **Previsão** (`/previsao`) | Previsão de consumo mensal por média móvel (k = 2, 3, 4): gráfico, erros (EQM, RQEM, EAM, EPAM) e compra sugerida para o próximo mês |
+| **Previsão** (`/previsao`) | Previsão de consumo mensal por média móvel (k = 2, 3, 4): gráfico com linhas selecionáveis (consumo real, ajustes k = 2, 3, 4 e previsão), erros (EQM, RQEM, EAM, EPAM) e compra sugerida para o próximo mês |
 | **Financeiro** (`/financeiro`) | Ganhos × gastos dos últimos 12 meses, resultado mensal e tabela |
 
 ## Estrutura de pastas
@@ -254,6 +254,7 @@ trava a linha do insumo com `SELECT ... FOR UPDATE` (ver `src/services/movimenta
 - [x] Fase 6 — financeiro, testes finais e README
 - [x] Fase 7 — previsão de consumo mensal por média móvel
 - [x] Fase 8 — Postgres (Supabase), login com Supabase Auth, RLS e deploy
+- [x] Fase 9 — redesenho da interface: hierarquia de cor (tinta, marca, status), menu agrupado com ícones, dashboard com destaque da decisão do dia, gráfico de previsão com seleção de linhas
 
 ## Fora do escopo desta versão
 

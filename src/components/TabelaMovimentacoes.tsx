@@ -67,7 +67,7 @@ export function TabelaMovimentacoes({ itens, unidade }: { itens: Linha[]; unidad
                 <td className="min-w-48 text-slate-600">
                   {m.motivo}
                   {m.pedidoId && (
-                    <Link href={`/pedidos?id=${m.pedidoId}`} className="ml-1 text-emerald-700 hover:underline">
+                    <Link href={`/pedidos?id=${m.pedidoId}`} className="ml-1 text-marca hover:underline">
                       ver pedido
                     </Link>
                   )}

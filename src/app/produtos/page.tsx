@@ -39,7 +39,7 @@ export default async function ProdutosPage({ searchParams }: { searchParams: Pro
               return (
                 <tr key={p.id} className={p.ativo ? "" : "opacity-50"}>
                   <td>
-                    <Link href={`/produtos/${p.id}`} className="font-medium text-emerald-700 hover:underline">
+                    <Link href={`/produtos/${p.id}`} className="font-medium text-marca hover:underline">
                       {p.nome}
                     </Link>
                     {!p.ativo && <span className="ml-2 text-xs text-slate-500">(inativo)</span>}

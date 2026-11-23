@@ -35,7 +35,7 @@ export default async function AlertasPage({ searchParams }: { searchParams: Prom
             key={f.valor}
             href={f.valor ? `/alertas?cor=${f.valor}` : "/alertas"}
             aria-current={cor === f.valor ? "page" : undefined}
-            className={`rounded-full px-3 py-1 text-sm ring-1 ${cor === f.valor ? "bg-slate-800 text-white ring-slate-800" : "bg-white text-slate-700 ring-slate-300 hover:bg-slate-100"}`}
+            className="chip"
           >
             {f.rotulo} ({conta(f.valor)})
           </Link>

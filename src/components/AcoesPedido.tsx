@@ -44,7 +44,7 @@ export function AcoesPedido({
             value={s}
             disabled={pendente}
             className={`rounded px-2 py-1 text-xs font-medium disabled:opacity-50 ${
-              s === "CANCELADO" ? "border border-red-300 text-red-700 hover:bg-red-50" : "bg-emerald-600 text-white hover:bg-emerald-700"
+              s === "CANCELADO" ? "border border-red-300 text-red-700 hover:bg-red-50" : "bg-marca text-white hover:bg-marca-escura"
             }`}
           >
             {ROTULO_ACAO[s]}

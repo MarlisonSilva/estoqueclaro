@@ -10,7 +10,7 @@ const ESTILO: Record<Cor, { rotulo: string; icone: string; classe: string }> = {
 export function Semaforo({ cor }: { cor: Cor }) {
   const e = ESTILO[cor];
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap ring-1 ${e.classe}`}>
+    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap ring-1 ${e.classe}`}>
       <span aria-hidden>{e.icone}</span>
       {e.rotulo}
     </span>

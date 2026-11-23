@@ -20,7 +20,7 @@ export function TabelaAlertas({ alertas, compacta = false }: { alertas: AlertaIn
             <th className="num">Dias restantes</th>
             <th className="num">Prazo entrega</th>
             {!compacta && <th className="num">Ponto de pedido</th>}
-            <th className="num">Comprar</th>
+            <th className="num text-tinta">Comprar</th>
             <th className="num">Custo estimado</th>
             <th />
           </tr>
@@ -32,7 +32,7 @@ export function TabelaAlertas({ alertas, compacta = false }: { alertas: AlertaIn
                 <Semaforo cor={a.semaforo} />
               </td>
               <td className="min-w-52">
-                <Link href={`/insumos/${a.id}`} className="font-medium hover:underline">
+                <Link href={`/insumos/${a.id}`} className="font-semibold text-tinta hover:underline">
                   {a.nome}
                 </Link>
                 <p className="text-xs text-slate-500">{a.motivo}</p>
@@ -45,11 +45,11 @@ export function TabelaAlertas({ alertas, compacta = false }: { alertas: AlertaIn
               <td className={`num ${a.folgaDias < 0 ? "font-semibold text-red-700" : ""}`}>{dias(a.diasRestantes)}</td>
               <td className="num">{a.prazoEntregaDias} d</td>
               {!compacta && <td className="num">{numero(Math.round(a.pontoPedido * 10) / 10)}</td>}
-              <td className="num font-semibold">{a.quantidadeSugerida > 0 ? `${numero(a.quantidadeSugerida)} ${a.unidade}` : "—"}</td>
+              <td className="num text-base font-bold text-tinta">{a.quantidadeSugerida > 0 ? `${numero(a.quantidadeSugerida)} ${a.unidade}` : "—"}</td>
               <td className="num">{a.custoSugerido > 0 ? moeda(a.custoSugerido) : "—"}</td>
               <td className="text-right whitespace-nowrap">
                 {a.semaforo !== "VERDE" && (
-                  <Link href={`/movimentacoes?insumo=${a.id}&nova=1`} className="text-xs text-emerald-700 hover:underline">
+                  <Link href={`/movimentacoes?insumo=${a.id}&nova=1`} className="link-acao">
                     registrar compra
                   </Link>
                 )}

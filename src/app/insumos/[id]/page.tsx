@@ -76,7 +76,7 @@ export default async function InsumoPage({ params }: { params: Promise<{ id: str
           <ul className="list-inside list-disc text-sm">
             {insumo.fichaItens.map((f) => (
               <li key={f.id}>
-                <Link href={`/produtos/${f.produto.id}`} className="text-emerald-700 hover:underline">
+                <Link href={`/produtos/${f.produto.id}`} className="text-marca hover:underline">
                   {f.produto.nome}
                 </Link>{" "}
                 — {numero(f.quantidade)} {insumo.unidade} por unidade
@@ -89,7 +89,7 @@ export default async function InsumoPage({ params }: { params: Promise<{ id: str
       <section className="cartao space-y-3 p-0 pt-4">
         <div className="flex items-center justify-between px-4">
           <h2 className="font-semibold">Últimas movimentações</h2>
-          <Link href={`/movimentacoes?insumo=${id}`} className="text-sm text-emerald-700 hover:underline">
+          <Link href={`/movimentacoes?insumo=${id}`} className="text-sm text-marca hover:underline">
             Ver todas ({insumo._count.movimentacoes})
           </Link>
         </div>
