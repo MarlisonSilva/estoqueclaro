@@ -63,7 +63,7 @@ export default async function InsumosPage({ searchParams }: Props) {
               return (
                 <tr key={i.id} className={i.ativo ? "" : "opacity-50"}>
                   <td>
-                    <Link href={`/insumos/${i.id}`} className="font-medium text-emerald-700 hover:underline">
+                    <Link href={`/insumos/${i.id}`} className="font-medium text-marca hover:underline">
                       {i.nome}
                     </Link>
                     {!i.ativo && <span className="ml-2 text-xs text-slate-500">(inativo)</span>}

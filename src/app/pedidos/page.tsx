@@ -97,7 +97,7 @@ export default async function PedidosPage({ searchParams }: Props) {
                 return (
                   <tr key={p.id} className="align-top">
                     <td>
-                      <Link href={`/pedidos?id=${p.id}`} className="text-emerald-700 hover:underline">#{p.id}</Link>
+                      <Link href={`/pedidos?id=${p.id}`} className="text-marca hover:underline">#{p.id}</Link>
                     </td>
                     <td className="whitespace-nowrap">{dataHora(p.criadoEm)}</td>
                     <td>{p.cliente ?? "—"}</td>

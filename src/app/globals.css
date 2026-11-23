@@ -1,28 +1,44 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-figtree);
   --font-mono: var(--font-geist-mono);
+  /* Hierarquia de cor: tinta (estrutura escura) > marca (ação) > status (alerta). */
+  --color-tinta: #0f2a2a;
+  --color-tinta-2: #17403f;
+  --color-marca: #0f766e;
+  --color-marca-escura: #0b5f58;
+  --color-fundo: #f1f3f2;
 }
 
 body {
-  @apply bg-slate-50 text-slate-800;
+  @apply bg-fundo text-slate-800;
+}
+
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-marca;
 }
 
 /* Peças reutilizadas em todas as telas. */
 @layer components {
-  .cartao { @apply rounded-lg border border-slate-200 bg-white p-4; }
-  .titulo { @apply text-2xl font-bold; }
-  .rotulo { @apply mb-1 block text-sm font-medium text-slate-700; }
-  .campo { @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200; }
-  .btn-primario { @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50 bg-emerald-600 text-white hover:bg-emerald-700; }
-  .btn-secundario { @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50 border border-slate-300 bg-white text-slate-700 hover:bg-slate-100; }
-  .btn-perigo { @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium disabled:opacity-50 border border-red-300 bg-white text-red-700 hover:bg-red-50; }
+  .cartao { @apply rounded-xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,42,42,0.04)]; }
+  .titulo { @apply text-2xl font-bold tracking-tight text-tinta; }
+  .subtitulo { @apply mt-1 max-w-3xl text-sm text-slate-500; }
+  .secao { @apply text-base font-semibold text-tinta; }
+  .rotulo { @apply mb-1.5 block text-sm font-medium text-slate-700; }
+  .campo { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:border-marca focus:outline-none focus:ring-2 focus:ring-teal-200; }
+  .btn-primario { @apply inline-flex items-center justify-center rounded-lg bg-marca px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-marca-escura disabled:opacity-50; }
+  .btn-secundario { @apply inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50; }
+  .btn-perigo { @apply inline-flex items-center justify-center rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50; }
+  .link-acao { @apply text-sm font-medium text-marca hover:underline; }
   .tabela { @apply w-full text-left text-sm; }
-  .tabela th { @apply border-b border-slate-200 px-3 py-2 font-medium whitespace-nowrap text-slate-500; }
-  .tabela td { @apply border-b border-slate-100 px-3 py-2; }
-  .tabela tbody tr:hover { @apply bg-slate-50; }
+  .tabela th { @apply border-b border-slate-200 bg-slate-50 px-4 py-2.5 text-xs font-semibold whitespace-nowrap text-slate-500; }
+  .tabela td { @apply border-b border-slate-100 px-4 py-3; }
+  .tabela tbody tr:last-child td { @apply border-b-0; }
+  .tabela tbody tr:hover { @apply bg-slate-50/70; }
   .num { @apply text-right tabular-nums whitespace-nowrap; }
-  .erro { @apply rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700; }
-  .sucesso { @apply rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800; }
+  .erro { @apply rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700; }
+  .sucesso { @apply rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800; }
+  .chip { @apply rounded-full px-3 py-1 text-sm font-medium ring-1 ring-slate-300 bg-white text-slate-700 hover:bg-slate-50; }
+  .chip[aria-current="page"] { @apply bg-tinta text-white ring-tinta; }
 }
